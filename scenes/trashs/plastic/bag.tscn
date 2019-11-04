@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/sprites/trashs/plastic/bag.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+func _ready():
+	pass
+
+func _process(delta):
+	position.y -= -300 * delta
+	
+	pass
+
+func _on_bagPlastic_area_entered(area):
+	if area.name.ends_with('Trash'):
+		queue_free();
+	pass 
+"
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 42.5354
+height = 71.8819
+
+[node name="bag" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="bagPlastic" type="Area2D" parent="."]
+
+[node name="collisionBag" type="CollisionShape2D" parent="bagPlastic"]
+position = Vector2( 59.159, 6.00165 )
+shape = SubResource( 2 )
+
+[node name="bagSprite" type="Sprite" parent="."]
+position = Vector2( 57.4442, 2.57213 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 1 )
+[connection signal="area_entered" from="bagPlastic" to="." method="_on_soda_area_entered"]
+[connection signal="area_entered" from="bagPlastic" to="." method="_on_bagPlastic_area_entered"]

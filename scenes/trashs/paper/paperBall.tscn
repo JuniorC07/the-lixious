@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/sprites/trashs/paper/paperBall.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+func _ready():
+	pass
+
+func _process(delta):
+	position.y -= -300 * delta
+	pass
+
+
+
+func _on_paperBallPaper_area_entered(area):
+		if area.name.ends_with('Trash'):
+			queue_free()
+		pass 
+"
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 50.1469
+
+[node name="paperBall" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="paperBallPaper" type="Area2D" parent="."]
+
+[node name="colisionPaperBall" type="CollisionShape2D" parent="paperBallPaper"]
+rotation = 1.95826
+shape = SubResource( 2 )
+
+[node name="paperBallSprite" type="Sprite" parent="."]
+scale = Vector2( 0.476114, 0.513776 )
+texture = ExtResource( 1 )
+[connection signal="area_entered" from="paperBallPaper" to="." method="_on_paper_area_entered"]
+[connection signal="area_entered" from="paperBallPaper" to="." method="_on_paperPaper_area_entered"]
+[connection signal="area_entered" from="paperBallPaper" to="." method="_on_paperBallPaper_area_entered"]
+[connection signal="area_entered" from="paperBallPaper" to="." method="_on_areaPaper_area_entered"]

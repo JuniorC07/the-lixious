@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/sprites/trashs/glass/bottle.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+func _ready():
+	pass
+
+func _process(delta):
+	position.y -= -300 * delta
+	pass
+
+
+func _on_bottleGlass_area_entered(area):
+	if area.name.ends_with('Trash'):
+		queue_free();
+	pass 
+
+
+func _on_bottleGlass_mouse_entered():
+	print('Teste')
+	pass 
+"
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 26.5767
+height = 90.0443
+
+[node name="bottle" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="bottleGlass" type="Area2D" parent="."]
+editor/display_folded = true
+
+[node name="collisionBottle" type="CollisionShape2D" parent="bottleGlass"]
+position = Vector2( 54.6361, -5.71834 )
+rotation = 0.968658
+shape = SubResource( 2 )
+
+[node name="bottleSprite" type="Sprite" parent="."]
+position = Vector2( 57.4442, 2.57213 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 1 )
+[connection signal="area_entered" from="bottleGlass" to="." method="_on_bottleGlass_area_entered"]
+[connection signal="area_entered" from="bottleGlass" to="." method="_on_soda_area_entered"]
+[connection signal="input_event" from="bottleGlass" to="." method="_on_bottleGlass_input_event"]
+[connection signal="mouse_entered" from="bottleGlass" to="." method="_on_bottleGlass_mouse_entered"]
+[connection signal="mouse_exited" from="bottleGlass" to="." method="_on_bottleGlass_mouse_exited"]

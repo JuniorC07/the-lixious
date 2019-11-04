@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/sprites/trashs/organic/banana.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+func _ready():
+	pass
+
+func _process(delta):
+	position.y -= -300 * delta
+	
+	pass
+
+func _on_bananaOrganic_area_entered(area):
+	if area.name.ends_with('Trash'):
+		queue_free();
+	pass 
+"
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 36.5625
+height = 56.0653
+
+[node name="banana" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="bananaOrganic" type="Area2D" parent="."]
+
+[node name="collisionBanana" type="CollisionShape2D" parent="bananaOrganic"]
+position = Vector2( 62.5884, 1.71475 )
+rotation = 1.4591
+shape = SubResource( 2 )
+
+[node name="bananaSprite" type="Sprite" parent="."]
+position = Vector2( 57.4442, 2.57213 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 1 )
+[connection signal="area_entered" from="bananaOrganic" to="." method="_on_soda_area_entered"]
+[connection signal="area_entered" from="bananaOrganic" to="." method="_on_bananaOrganic_area_entered"]
