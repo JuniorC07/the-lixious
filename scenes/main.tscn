@@ -39,18 +39,13 @@ const trashs = [
 	new_snack, new_bag, new_bowl, new_glass
 ];
 
-var drag = true;
-
 func _ready():
 	pass
 
 func spawn_trash():
-	if drag:
-		drag = false
-	else:
-		drag = true
-	#var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance()
-	var trash = trashs[int(rand_range(0, 9))].instance()
+
+	var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance()
+	#var trash = trashs[1].instance()
 	trash.position.x = int(rand_range(0, 600))
 	trash.position.y = 0
 	
@@ -66,7 +61,6 @@ func _on_plasticTrash_area_entered(area):
 	if area.name.ends_with('Plastic'):
 		print('Plastic')
 	pass 
-
 
 func _on_metalTrash_area_entered(area):
 	if area.name.ends_with('Metal'):

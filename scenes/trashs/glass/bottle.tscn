@@ -16,13 +16,7 @@ func _process(delta):
 func _on_bottleGlass_area_entered(area):
 	if area.name.ends_with('Trash'):
 		queue_free();
-	pass 
-
-
-func _on_bottleGlass_mouse_entered():
-	print('Teste')
-	pass 
-"
+	pass "
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 26.5767
@@ -32,7 +26,6 @@ height = 90.0443
 script = SubResource( 1 )
 
 [node name="bottleGlass" type="Area2D" parent="."]
-editor/display_folded = true
 
 [node name="collisionBottle" type="CollisionShape2D" parent="bottleGlass"]
 position = Vector2( 54.6361, -5.71834 )
@@ -44,7 +37,3 @@ position = Vector2( 57.4442, 2.57213 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 1 )
 [connection signal="area_entered" from="bottleGlass" to="." method="_on_bottleGlass_area_entered"]
-[connection signal="area_entered" from="bottleGlass" to="." method="_on_soda_area_entered"]
-[connection signal="input_event" from="bottleGlass" to="." method="_on_bottleGlass_input_event"]
-[connection signal="mouse_entered" from="bottleGlass" to="." method="_on_bottleGlass_mouse_entered"]
-[connection signal="mouse_exited" from="bottleGlass" to="." method="_on_bottleGlass_mouse_exited"]

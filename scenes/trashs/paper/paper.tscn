@@ -36,6 +36,4 @@ shape = SubResource( 2 )
 [node name="paperSprite" type="Sprite" parent="."]
 scale = Vector2( 0.476114, 0.513776 )
 texture = ExtResource( 1 )
-[connection signal="area_entered" from="paperPaper" to="." method="_on_paper_area_entered"]
 [connection signal="area_entered" from="paperPaper" to="." method="_on_paperPaper_area_entered"]
-[connection signal="area_entered" from="paperPaper" to="." method="_on_areaPaper_area_entered"]

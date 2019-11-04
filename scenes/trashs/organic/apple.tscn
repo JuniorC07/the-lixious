@@ -35,5 +35,4 @@ shape = SubResource( 2 )
 position = Vector2( 57.4442, 2.57213 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 1 )
-[connection signal="area_entered" from="appleOrganic" to="." method="_on_soda_area_entered"]
 [connection signal="area_entered" from="appleOrganic" to="." method="_on_appleOrganic_area_entered"]
