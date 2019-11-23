@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://assets/sprites/stages/backgroundPhase.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/stages/backgroundPlanet.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://assets/sprites/dumpsters/paper.png" type="Texture" id=8]
 [ext_resource path="res://assets/sprites/stages/config.png" type="Texture" id=9]
 [ext_resource path="res://assets/sprites/planets/happy.png" type="Texture" id=10]
+[ext_resource path="res://assets/fonts/LemonMilklight.otf" type="DynamicFontData" id=11]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -33,11 +34,49 @@ const planet_worried = preload(\"res://assets/sprites/planets/worried.png\")
 const planet_sad = preload(\"res://assets/sprites/planets/sad.png\")
 const planet_dead = preload(\"res://assets/sprites/planets/dead.png\")
 
+onready var planet_sprite = get_node(\"planet/planet\");
+
+onready var label_points = get_node(\"bar/points\");
+
+onready var lifeOne = get_node(\"bar/lifeOne\");
+onready var lifeTwo = get_node(\"bar/lifeTwo\");
+onready var lifeThree = get_node(\"bar/lifeThree\");
+
 const trashs = [
 	new_soda, new_bottle, new_paper,
 	new_paper_ball, new_apple, new_banana,
 	new_snack, new_bag, new_bowl, new_glass
 ];
+
+const humor_planet = [planet_worried, planet_sad, planet_dead];
+
+var points = 0.0;
+var points_missed = 1;
+
+
+func kill_planet():
+	if points_missed == 5:
+		planet_sprite.set_texture(planet_worried);
+		lifeThree.hide()
+	elif points_missed == 10:
+		planet_sprite.set_texture(planet_sad);
+		lifeTwo.hide()
+	elif points_missed == 15:
+		planet_sprite.set_texture(planet_dead);
+		lifeOne.hide()
+		print('Game Over');
+	pass
+
+func hit():
+	points = points+10;
+	label_points.set_text(String(points/1000)+\" K\")
+	pass
+	
+func miss():
+	points_missed = points_missed+1;
+	if points_missed % 5 == 0:
+		kill_planet()
+	pass
 
 func _ready():
 	pass
@@ -59,36 +98,51 @@ func _on_timer_timeout():
 
 func _on_plasticTrash_area_entered(area):
 	if area.name.ends_with('Plastic'):
-		print('Plastic')
+		hit()
+	else:
+		miss()
 	pass 
 
 func _on_metalTrash_area_entered(area):
 	if area.name.ends_with('Metal'):
-		print('Metal')
+		hit()
+	else:
+		miss()
 	pass 
 
 
 func _on_paperTrash_area_entered(area):
 	if area.name.ends_with('Paper'):
-		print('Paper')
+		hit()
+	else:
+		miss()
 	pass 
 
 
 func _on_glassTrash_area_entered(area):
 	if area.name.ends_with('Glass'):
-		print('Glass')
+		hit()
+	else:
+		miss()
 	pass 
 
 
 func _on_organicTrash_area_entered(area):
 	if area.name.ends_with('Organic'):
-		print('Organic')
+		hit()
+	else:
+		miss()
 	pass
 "
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 69.496
 height = 128.521
+
+[sub_resource type="DynamicFont" id=3]
+size = 31
+outline_size = 1
+font_data = ExtResource( 11 )
 
 [node name="main" type="Node"]
 script = SubResource( 1 )
@@ -97,9 +151,12 @@ script = SubResource( 1 )
 editor/display_folded = true
 
 [node name="main" type="Sprite" parent="backgrounds"]
-position = Vector2( 361.323, 511.75 )
+position = Vector2( 360.42, 511.555 )
 scale = Vector2( 0.768741, 0.679974 )
 texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="planet" type="Sprite" parent="backgrounds"]
 position = Vector2( 357.946, 1152.27 )
@@ -114,7 +171,6 @@ z_index = 2
 texture = ExtResource( 3 )
 
 [node name="dumpsters" type="Node" parent="."]
-editor/display_folded = true
 
 [node name="organicTrash" type="Node2D" parent="dumpsters"]
 editor/display_folded = true
@@ -131,7 +187,6 @@ position = Vector2( 68.332, 1007 )
 shape = SubResource( 2 )
 
 [node name="glassTrash" type="Node2D" parent="dumpsters"]
-editor/display_folded = true
 
 [node name="glass" type="Sprite" parent="dumpsters/glassTrash"]
 position = Vector2( 212.291, 980 )
@@ -202,12 +257,49 @@ z_index = 2
 texture = ExtResource( 9 )
 
 [node name="planet" type="Node2D" parent="."]
+editor/display_folded = true
 
 [node name="planet" type="Sprite" parent="planet"]
 position = Vector2( 367.03, 1151.44 )
 scale = Vector2( 0.55, 0.55 )
 z_index = 2
 texture = ExtResource( 10 )
+
+[node name="bar" type="Node2D" parent="."]
+editor/display_folded = true
+z_index = 2
+
+[node name="lifeOne" type="Sprite" parent="bar"]
+position = Vector2( 45.658, 50 )
+scale = Vector2( 0.2, 0.2 )
+z_index = 1
+texture = ExtResource( 10 )
+
+[node name="lifeTwo" type="Sprite" parent="bar"]
+position = Vector2( 250.519, 94.5125 )
+scale = Vector2( 0.2, 0.2 )
+z_index = 1
+texture = ExtResource( 10 )
+offset = Vector2( -606.383, -220 )
+
+[node name="lifeThree" type="Sprite" parent="bar"]
+position = Vector2( 212.043, 50 )
+scale = Vector2( 0.2, 0.2 )
+z_index = 1
+texture = ExtResource( 10 )
+
+[node name="points" type="Label" parent="bar"]
+anchor_right = 0.65
+margin_left = 63.5161
+margin_top = 1126.71
+margin_right = 163.516
+margin_bottom = 1174.71
+rect_rotation = -23.74
+custom_fonts/font = SubResource( 3 )
+text = "0.00 K"
+align = 1
+valign = 1
+autowrap = true
 [connection signal="area_entered" from="dumpsters/organicTrash/organicTrash" to="." method="_on_organicTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/glassTrash/glassTrash" to="." method="_on_glassTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/plasticTrash/plasticTrash" to="." method="_on_plasticTrash_area_entered"]
