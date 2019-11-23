@@ -5,18 +5,40 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
+onready var global = get_node(\"/root/global\");
+
+var current_id = String(randi() + randf());
+var mouse_in = false
+var dragging = false
+
 func _ready():
 	pass
 
 func _process(delta):
-	position.y -= -300 * delta
-	
+	if mouse_in && Input.is_action_pressed(\"click\") && global.canMove:
+		dragging = true
+		
+	if dragging && Input.is_action_pressed(\"click\") && global.canMove:
+		position = get_viewport().get_mouse_position()
+		
+	else:
+		dragging = false
+		position.y -= -300 * delta
 	pass
-
 
 func _on_glassPlastic_area_entered(area):
 	if area.name.ends_with('Trash'):
 		queue_free();
+	pass
+
+
+func _on_glassPlastic_mouse_entered():
+	mouse_in = true
+	print(current_id);
+	pass
+
+func _on_glassPlastic_mouse_exited():
+	mouse_in = false
 	pass
 "
 
@@ -28,6 +50,7 @@ height = 30.4762
 script = SubResource( 1 )
 
 [node name="glassPlastic" type="Area2D" parent="."]
+editor/display_folded = true
 
 [node name="collisionGlass" type="CollisionShape2D" parent="glassPlastic"]
 position = Vector2( 57.5621, -3.27997 )
@@ -38,3 +61,5 @@ position = Vector2( 57.4442, 2.57213 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 1 )
 [connection signal="area_entered" from="glassPlastic" to="." method="_on_glassPlastic_area_entered"]
+[connection signal="mouse_entered" from="glassPlastic" to="." method="_on_glassPlastic_mouse_entered"]
+[connection signal="mouse_exited" from="glassPlastic" to="." method="_on_glassPlastic_mouse_exited"]
