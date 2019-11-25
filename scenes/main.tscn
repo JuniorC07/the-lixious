@@ -84,8 +84,7 @@ func _ready():
 
 func spawn_trash():
 
-	#var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance()
-	var trash = trashs[9].instance()
+	var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance();
 	trash.position.x = int(rand_range(0, 600))
 	trash.position.y = 0
 	

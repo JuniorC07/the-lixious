@@ -5,20 +5,42 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
+var current_id = String(randi() + randf());
+var mouse_in = false
+var dragging = false
+
 func _ready():
 	pass
 
 func _process(delta):
-	position.y -= -300 * delta
+	if mouse_in && Input.is_action_pressed(\"click\"):
+		dragging = true
+		
+	if dragging && Input.is_action_pressed(\"click\"):
+		position = get_viewport().get_mouse_position()
+		
+	else:
+		if current_id == global.current_id:
+			global.current_id = \"\";
+		dragging = false
+		position.y -= -300 * delta
 	pass
-
-
-
+	
 func _on_paperBallPaper_area_entered(area):
 		if area.name.ends_with('Trash'):
 			queue_free()
 		pass 
-"
+
+
+func _on_paperBallPaper_mouse_entered():
+	if global.current_id == \"\":
+		global.current_id = current_id;
+		mouse_in = true
+	pass
+
+func _on_paperBallPaper_mouse_exited():
+	mouse_in = false
+	pass"
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 50.1469
@@ -36,3 +58,5 @@ shape = SubResource( 2 )
 scale = Vector2( 0.476114, 0.513776 )
 texture = ExtResource( 1 )
 [connection signal="area_entered" from="paperBallPaper" to="." method="_on_paperBallPaper_area_entered"]
+[connection signal="mouse_entered" from="paperBallPaper" to="." method="_on_paperBallPaper_mouse_entered"]
+[connection signal="mouse_exited" from="paperBallPaper" to="." method="_on_paperBallPaper_mouse_exited"]
