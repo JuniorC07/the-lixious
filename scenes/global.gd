@@ -1,6 +1,7 @@
 extends Node2D
 
-var canMove = true;
+var current_id;
 
 func _ready():
+	current_id = "";
 	pass
