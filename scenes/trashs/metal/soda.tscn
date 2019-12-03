@@ -31,8 +31,8 @@ func _process(delta):
 func _on_soda_area_entered(area):
 	if area.name.ends_with('Trash'):
 		queue_free();
+		global.current_id = \"\"
 	pass
-
 
 func _on_sodaMetal_mouse_entered():
 	if global.current_id == \"\":

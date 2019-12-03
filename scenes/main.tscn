@@ -43,6 +43,10 @@ onready var lifeOne = get_node(\"bar/lifeOne\");
 onready var lifeTwo = get_node(\"bar/lifeTwo\");
 onready var lifeThree = get_node(\"bar/lifeThree\");
 
+onready var levelOne = get_node(\"level1\");
+onready var levelTwo = get_node(\"level2\");
+onready var levelThree = get_node(\"level3\");
+
 const trashs = [
 	new_soda, new_bottle, new_paper,
 	new_paper_ball, new_apple, new_banana,
@@ -54,7 +58,12 @@ const humor_planet = [planet_worried, planet_sad, planet_dead];
 var points = 0.0;
 var points_missed = 1;
 
-
+func restart():
+	points = 0.0;
+	points_missed = 0;
+	global.current_id = '';
+	pass
+	
 func kill_planet():
 	if points_missed == 5:
 		planet_sprite.set_texture(planet_worried);
@@ -65,36 +74,36 @@ func kill_planet():
 	elif points_missed == 15:
 		planet_sprite.set_texture(planet_dead);
 		lifeOne.hide()
-		print('Game Over');
+		game_over();
 	pass
 
+func game_over():
+# warning-ignore:return_value_discarded
+	get_tree().change_scene(\"res://scenes/menu.tscn\")
+	pass
+	
 func hit():
 	points = points+10;
 	label_points.set_text(String(points/1000)+\" K\")
 	pass
 	
 func miss():
-	points_missed = points_missed+1;
+	points_missed = points_missed + 1;
+	print(String(points_missed))
 	if points_missed % 5 == 0:
 		kill_planet()
 	pass
 
 func _ready():
+	restart();
 	pass
 
 func spawn_trash():
-
 	var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance();
 	trash.position.x = int(rand_range(0, 600))
 	trash.position.y = 0
-	
 	get_node('container').add_child(trash)
 	pass
-
-func _on_timer_timeout():
-	spawn_trash()
-	pass 
-
 
 func _on_plasticTrash_area_entered(area):
 	if area.name.ends_with('Plastic'):
@@ -110,14 +119,12 @@ func _on_metalTrash_area_entered(area):
 		miss()
 	pass 
 
-
 func _on_paperTrash_area_entered(area):
 	if area.name.ends_with('Paper'):
 		hit()
 	else:
 		miss()
 	pass 
-
 
 func _on_glassTrash_area_entered(area):
 	if area.name.ends_with('Glass'):
@@ -126,13 +133,34 @@ func _on_glassTrash_area_entered(area):
 		miss()
 	pass 
 
-
 func _on_organicTrash_area_entered(area):
 	if area.name.ends_with('Organic'):
 		hit()
 	else:
 		miss()
-	pass"
+	pass
+
+
+func _on_level1_timeout():
+	if int(points) == 300:
+		levelOne.stop();
+		levelTwo.start();
+	spawn_trash()
+	pass
+
+
+func _on_level2_timeout():	
+	if int(points) == 900:
+		levelTwo.stop()
+		levelThree.start();
+	spawn_trash()
+	pass
+
+
+func _on_level3_timeout():
+	spawn_trash()
+	pass
+"
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 69.496
@@ -147,15 +175,11 @@ font_data = ExtResource( 11 )
 script = SubResource( 1 )
 
 [node name="backgrounds" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="main" type="Sprite" parent="backgrounds"]
 position = Vector2( 360.42, 511.555 )
 scale = Vector2( 0.768741, 0.679974 )
 texture = ExtResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="planet" type="Sprite" parent="backgrounds"]
 position = Vector2( 357.946, 1152.27 )
@@ -245,10 +269,6 @@ shape = SubResource( 2 )
 
 [node name="container" type="Node" parent="."]
 
-[node name="timer" type="Timer" parent="."]
-wait_time = 2.0
-autostart = true
-
 [node name="config" type="Node2D" parent="."]
 editor/display_folded = true
 
@@ -305,10 +325,22 @@ autowrap = true
 
 [node name="global" type="Node2D" parent="."]
 script = ExtResource( 12 )
+
+[node name="level1" type="Timer" parent="."]
+wait_time = 1.5
+autostart = true
+
+[node name="level3" type="Timer" parent="."]
+wait_time = 0.8
+
+[node name="level2" type="Timer" parent="."]
+wait_time = 1.1
 [connection signal="area_entered" from="dumpsters/organicTrash/organicTrash" to="." method="_on_organicTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/glassTrash/glassTrash" to="." method="_on_glassTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/plasticTrash/plasticTrash" to="." method="_on_plasticTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/metalTrash/metalTrash" to="." method="_on_metalTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/paperTrash/paperTrash" to="." method="_on_paperTrash_area_entered"]
-[connection signal="timeout" from="timer" to="." method="_on_timer_timeout"]
 [connection signal="texture_changed" from="planet/planet" to="." method="_on_planet_texture_changed"]
+[connection signal="timeout" from="level1" to="." method="_on_level1_timeout"]
+[connection signal="timeout" from="level3" to="." method="_on_level3_timeout"]
+[connection signal="timeout" from="level2" to="." method="_on_level2_timeout"]

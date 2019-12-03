@@ -30,7 +30,8 @@ func _process(delta):
 
 func _on_snackOrganic_area_entered(area):
 	if area.name.ends_with('Trash'):
-		queue_free()
+		queue_free();
+		global.current_id = \"\"
 	pass 
 
 
