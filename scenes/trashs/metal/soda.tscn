@@ -31,7 +31,7 @@ func _process(delta):
 func _on_soda_area_entered(area):
 	if area.name.ends_with('Trash'):
 		queue_free();
-		global.current_id = \"\"
+		global.current_id = \"\";
 	pass
 
 func _on_sodaMetal_mouse_entered():
@@ -53,6 +53,7 @@ height = 47.6364
 script = SubResource( 1 )
 
 [node name="sodaMetal" type="Area2D" parent="."]
+editor/display_folded = true
 
 [node name="collisionSoda" type="CollisionShape2D" parent="sodaMetal"]
 position = Vector2( 56.5868, 2.57213 )

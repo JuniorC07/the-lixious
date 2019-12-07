@@ -22,6 +22,7 @@ config/icon="res://icon.png"
 [autoload]
 
 global="*res://scenes/global.gd"
+game_controller="*res://scenes/game_controller.gd"
 
 [display]
 

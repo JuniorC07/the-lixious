@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://assets/sprites/stages/backgroundPhase.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/stages/backgroundPlanet.png" type="Texture" id=2]
@@ -12,6 +12,12 @@
 [ext_resource path="res://assets/sprites/planets/happy.png" type="Texture" id=10]
 [ext_resource path="res://assets/fonts/LemonMilklight.otf" type="DynamicFontData" id=11]
 [ext_resource path="res://scenes/global.gd" type="Script" id=12]
+[ext_resource path="res://assets/sprites/menus/gameOver/textbox.png" type="Texture" id=13]
+[ext_resource path="res://assets/sprites/menus/gameOver/pointsbar.png" type="Texture" id=14]
+[ext_resource path="res://assets/sprites/menus/gameOver/best.png" type="Texture" id=15]
+[ext_resource path="res://assets/sprites/menus/gameOver/points.png" type="Texture" id=16]
+[ext_resource path="res://assets/sprites/menus/gameOver/gameOver.png" type="Texture" id=17]
+[ext_resource path="res://assets/sprites/menus/gameOver/back.png" type="Texture" id=18]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -47,6 +53,8 @@ onready var levelOne = get_node(\"level1\");
 onready var levelTwo = get_node(\"level2\");
 onready var levelThree = get_node(\"level3\");
 
+var lastGame = false;
+
 const trashs = [
 	new_soda, new_bottle, new_paper,
 	new_paper_ball, new_apple, new_banana,
@@ -78,8 +86,13 @@ func kill_planet():
 	pass
 
 func game_over():
-# warning-ignore:return_value_discarded
-	get_tree().change_scene(\"res://scenes/menu.tscn\")
+	lastGame = true
+	$Sprite/animation.play(\"game_over_an\");
+	$Sprite/label_points.text = String(points);7
+	
+	if points > game_controller.best_score:
+		game_controller.best_score = points
+	$Sprite/label_best.text = String(game_controller.best_score);
 	pass
 	
 func hit():
@@ -89,7 +102,6 @@ func hit():
 	
 func miss():
 	points_missed = points_missed + 1;
-	print(String(points_missed))
 	if points_missed % 5 == 0:
 		kill_planet()
 	pass
@@ -99,6 +111,7 @@ func _ready():
 	pass
 
 func spawn_trash():
+	
 	var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance();
 	trash.position.x = int(rand_range(0, 600))
 	trash.position.y = 0
@@ -145,7 +158,8 @@ func _on_level1_timeout():
 	if int(points) == 300:
 		levelOne.stop();
 		levelTwo.start();
-	spawn_trash()
+	if !lastGame:
+		spawn_trash()
 	pass
 
 
@@ -153,12 +167,19 @@ func _on_level2_timeout():
 	if int(points) == 900:
 		levelTwo.stop()
 		levelThree.start();
-	spawn_trash()
+	if !lastGame:
+		spawn_trash()
 	pass
 
 
 func _on_level3_timeout():
-	spawn_trash()
+	if !lastGame:
+		spawn_trash()
+	pass
+
+
+func _on_restart_pressed():
+	get_tree().reload_current_scene();
 	pass
 "
 
@@ -171,10 +192,30 @@ size = 31
 outline_size = 1
 font_data = ExtResource( 11 )
 
+[sub_resource type="Animation" id=4]
+resource_name = "game_over_an"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.997533 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1.5, -840 ), Vector2( -1.5, 0 ) ]
+}
+
+[sub_resource type="DynamicFont" id=5]
+size = 55
+font_data = ExtResource( 11 )
+
 [node name="main" type="Node"]
 script = SubResource( 1 )
 
 [node name="backgrounds" type="Node2D" parent="."]
+editor/display_folded = true
 
 [node name="main" type="Sprite" parent="backgrounds"]
 position = Vector2( 360.42, 511.555 )
@@ -331,10 +372,72 @@ wait_time = 1.5
 autostart = true
 
 [node name="level3" type="Timer" parent="."]
-wait_time = 0.8
+wait_time = 0.85
 
 [node name="level2" type="Timer" parent="."]
-wait_time = 1.1
+wait_time = 1.15
+
+[node name="Sprite" type="Sprite" parent="."]
+editor/display_folded = true
+position = Vector2( -1.5, -830 )
+
+[node name="box" type="Sprite" parent="Sprite"]
+position = Vector2( 360.999, 511.363 )
+scale = Vector2( 0.647739, 0.687121 )
+texture = ExtResource( 13 )
+
+[node name="bar" type="Sprite" parent="Sprite"]
+position = Vector2( 363.109, 479.185 )
+scale = Vector2( 0.648574, 0.806631 )
+texture = ExtResource( 14 )
+
+[node name="bar2" type="Sprite" parent="Sprite"]
+position = Vector2( 360.094, 650 )
+scale = Vector2( 0.648574, 0.806631 )
+texture = ExtResource( 14 )
+
+[node name="best" type="Sprite" parent="Sprite"]
+position = Vector2( 364.778, 563.748 )
+scale = Vector2( 0.9, 0.9 )
+texture = ExtResource( 15 )
+
+[node name="points" type="Sprite" parent="Sprite"]
+position = Vector2( 357.242, 399.044 )
+scale = Vector2( 0.9, 0.9 )
+texture = ExtResource( 16 )
+
+[node name="game_over" type="Sprite" parent="Sprite"]
+position = Vector2( 358.749, 275.845 )
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 17 )
+
+[node name="animation" type="AnimationPlayer" parent="Sprite"]
+anims/game_over_an = SubResource( 4 )
+
+[node name="label_points" type="Label" parent="Sprite"]
+margin_left = 80.0
+margin_top = 444.0
+margin_right = 645.0
+margin_bottom = 516.0
+custom_fonts/font = SubResource( 5 )
+text = "0"
+align = 1
+valign = 1
+
+[node name="label_best" type="Label" parent="Sprite"]
+margin_left = 78.0
+margin_top = 614.0
+margin_right = 642.0
+margin_bottom = 686.0
+custom_fonts/font = SubResource( 5 )
+text = "0"
+align = 1
+valign = 1
+
+[node name="restart" type="TouchScreenButton" parent="Sprite"]
+position = Vector2( 554.73, 705.824 )
+scale = Vector2( 0.4, 0.4 )
+normal = ExtResource( 18 )
 [connection signal="area_entered" from="dumpsters/organicTrash/organicTrash" to="." method="_on_organicTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/glassTrash/glassTrash" to="." method="_on_glassTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/plasticTrash/plasticTrash" to="." method="_on_plasticTrash_area_entered"]
@@ -344,3 +447,4 @@ wait_time = 1.1
 [connection signal="timeout" from="level1" to="." method="_on_level1_timeout"]
 [connection signal="timeout" from="level3" to="." method="_on_level3_timeout"]
 [connection signal="timeout" from="level2" to="." method="_on_level2_timeout"]
+[connection signal="pressed" from="Sprite/restart" to="." method="_on_restart_pressed"]
