@@ -24,7 +24,7 @@ func get_bestscore():
 	best_score = file.get_var();
 	file.close();
 	pass
-	
+
 func set_bestscore(new_score):
 	best_score = new_score;
 	save_bestscore();

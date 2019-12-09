@@ -18,14 +18,15 @@ func _process(delta):
 	if mouse_in && Input.is_action_pressed(\"click\"):
 		dragging = true
 		
-	if dragging && Input.is_action_pressed(\"click\"):
+	if dragging && Input.is_action_pressed(\"click\") && !global.pause:
 		position = get_viewport().get_mouse_position()
 		
 	else:
 		if current_id == global.current_id:
 			global.current_id = \"\";
 		dragging = false
-		position.y -= -300 * delta
+		if !global.pause:
+			position.y -= -300 * delta
 	pass
 
 func _on_paperPaper_area_entered(area):

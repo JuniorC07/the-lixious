@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://assets/sprites/stages/backgroundPhase.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/stages/backgroundPlanet.png" type="Texture" id=2]
@@ -18,6 +18,15 @@
 [ext_resource path="res://assets/sprites/menus/gameOver/points.png" type="Texture" id=16]
 [ext_resource path="res://assets/sprites/menus/gameOver/gameOver.png" type="Texture" id=17]
 [ext_resource path="res://assets/sprites/menus/gameOver/back.png" type="Texture" id=18]
+[ext_resource path="res://assets/sprites/menus/config.png" type="Texture" id=19]
+[ext_resource path="res://assets/sprites/menus/music.png" type="Texture" id=20]
+[ext_resource path="res://assets/sprites/menus/sound.png" type="Texture" id=21]
+[ext_resource path="res://assets/sprites/menus/back.png" type="Texture" id=22]
+[ext_resource path="res://assets/sprites/menus/volume.png" type="Texture" id=23]
+[ext_resource path="res://assets/sounds/sound.ogg" type="AudioStream" id=24]
+[ext_resource path="res://assets/sounds/ya.wav" type="AudioStream" id=25]
+[ext_resource path="res://assets/sounds/nono.wav" type="AudioStream" id=26]
+[ext_resource path="res://assets/sounds/game_over.wav" type="AudioStream" id=27]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -86,33 +95,45 @@ func kill_planet():
 	pass
 
 func game_over():
+	if global.music:
+		$music.stop();
+	if global.sound:
+		$game_over.play()
+	
 	lastGame = true
-	$Sprite/animation.play(\"game_over_an\");
-	$Sprite/label_points.text = String(points);7
+	$game_over_screen/animation.play(\"game_over_an\");
+	$game_over_screen/label_points.text = String(points);
 	
 	if points > game_controller.best_score:
 		game_controller.best_score = points
-	$Sprite/label_best.text = String(game_controller.best_score);
+	$game_over_screen/label_best.text = String(game_controller.best_score);
 	pass
 	
 func hit():
+	if global.sound:
+		$hit.play();
 	points = points+10;
 	label_points.set_text(String(points/1000)+\" K\")
 	pass
 	
 func miss():
+	if global.sound:
+		$miss.play()
 	points_missed = points_missed + 1;
 	if points_missed % 5 == 0:
 		kill_planet()
 	pass
 
 func _ready():
+	if global.music:
+		$music.play();
 	restart();
 	pass
 
 func spawn_trash():
 	
 	var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance();
+	#var trash = trashs[0].instance();
 	trash.position.x = int(rand_range(0, 600))
 	trash.position.y = 0
 	get_node('container').add_child(trash)
@@ -158,22 +179,22 @@ func _on_level1_timeout():
 	if int(points) == 300:
 		levelOne.stop();
 		levelTwo.start();
-	if !lastGame:
+	if !lastGame && !global.pause:
 		spawn_trash()
 	pass
 
 
 func _on_level2_timeout():	
-	if int(points) == 900:
+	if int(points) == 700:
 		levelTwo.stop()
 		levelThree.start();
-	if !lastGame:
+	if !lastGame && !global.pause:
 		spawn_trash()
 	pass
 
 
 func _on_level3_timeout():
-	if !lastGame:
+	if !lastGame && !global.pause:
 		spawn_trash()
 	pass
 
@@ -181,6 +202,43 @@ func _on_level3_timeout():
 func _on_restart_pressed():
 	get_tree().reload_current_scene();
 	pass
+
+
+func _on_TouchScreenButton_pressed():
+	global.current_id = \"\";
+	if !global.pause:
+		$screen_config.show();
+		$screen_config/config_animation.play(\"config\");	
+	global.pause = true;
+	pass
+
+
+func _on_music_pressed():
+	if global.music:
+		global.music = false
+		$music.stop();
+		$screen_config/no_music.visible = true
+	else:
+		global.music = true
+		$music.play();
+		$screen_config/no_music.visible = false
+	pass 
+
+
+func _on_sound_pressed():
+	if global.sound:
+		$screen_config/no_sound.visible = true
+		global.sound = false
+	else:
+		$screen_config/no_sound.visible = false
+		global.sound = true
+	pass
+
+
+func _on_back_pressed():
+	global.pause = false;
+	$screen_config.hide();
+	pass # Replace with function body.
 "
 
 [sub_resource type="CapsuleShape2D" id=2]
@@ -210,6 +268,22 @@ tracks/0/keys = {
 [sub_resource type="DynamicFont" id=5]
 size = 55
 font_data = ExtResource( 11 )
+
+[sub_resource type="Animation" id=6]
+resource_name = "config"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1.56917 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 1450 ) ]
+}
 
 [node name="main" type="Node"]
 script = SubResource( 1 )
@@ -313,14 +387,14 @@ shape = SubResource( 2 )
 [node name="config" type="Node2D" parent="."]
 editor/display_folded = true
 
-[node name="Sprite" type="Sprite" parent="config"]
-modulate = Color( 0.662745, 0.662745, 0.662745, 1 )
-position = Vector2( 619.44, 1155.17 )
-z_index = 2
-texture = ExtResource( 9 )
+[node name="TouchScreenButton" type="TouchScreenButton" parent="config"]
+modulate = Color( 0.658824, 0.607843, 0.607843, 1 )
+position = Vector2( 530.009, 1076.85 )
+scale = Vector2( 1.17795, 1.13346 )
+z_index = 1
+normal = ExtResource( 9 )
 
 [node name="planet" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="planet" type="Sprite" parent="planet"]
 position = Vector2( 367.03, 1151.44 )
@@ -368,53 +442,52 @@ autowrap = true
 script = ExtResource( 12 )
 
 [node name="level1" type="Timer" parent="."]
-wait_time = 1.5
+wait_time = 1.4
 autostart = true
 
 [node name="level3" type="Timer" parent="."]
-wait_time = 0.85
+wait_time = 0.87
 
 [node name="level2" type="Timer" parent="."]
-wait_time = 1.15
+wait_time = 1.1
 
-[node name="Sprite" type="Sprite" parent="."]
-editor/display_folded = true
+[node name="game_over_screen" type="Sprite" parent="."]
 position = Vector2( -1.5, -830 )
 
-[node name="box" type="Sprite" parent="Sprite"]
-position = Vector2( 360.999, 511.363 )
+[node name="box" type="Sprite" parent="game_over_screen"]
+position = Vector2( 360.999, 508.109 )
 scale = Vector2( 0.647739, 0.687121 )
 texture = ExtResource( 13 )
 
-[node name="bar" type="Sprite" parent="Sprite"]
+[node name="bar" type="Sprite" parent="game_over_screen"]
 position = Vector2( 363.109, 479.185 )
 scale = Vector2( 0.648574, 0.806631 )
 texture = ExtResource( 14 )
 
-[node name="bar2" type="Sprite" parent="Sprite"]
+[node name="bar2" type="Sprite" parent="game_over_screen"]
 position = Vector2( 360.094, 650 )
 scale = Vector2( 0.648574, 0.806631 )
 texture = ExtResource( 14 )
 
-[node name="best" type="Sprite" parent="Sprite"]
+[node name="best" type="Sprite" parent="game_over_screen"]
 position = Vector2( 364.778, 563.748 )
 scale = Vector2( 0.9, 0.9 )
 texture = ExtResource( 15 )
 
-[node name="points" type="Sprite" parent="Sprite"]
+[node name="points" type="Sprite" parent="game_over_screen"]
 position = Vector2( 357.242, 399.044 )
 scale = Vector2( 0.9, 0.9 )
 texture = ExtResource( 16 )
 
-[node name="game_over" type="Sprite" parent="Sprite"]
+[node name="game_over" type="Sprite" parent="game_over_screen"]
 position = Vector2( 358.749, 275.845 )
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 17 )
 
-[node name="animation" type="AnimationPlayer" parent="Sprite"]
+[node name="animation" type="AnimationPlayer" parent="game_over_screen"]
 anims/game_over_an = SubResource( 4 )
 
-[node name="label_points" type="Label" parent="Sprite"]
+[node name="label_points" type="Label" parent="game_over_screen"]
 margin_left = 80.0
 margin_top = 444.0
 margin_right = 645.0
@@ -424,7 +497,7 @@ text = "0"
 align = 1
 valign = 1
 
-[node name="label_best" type="Label" parent="Sprite"]
+[node name="label_best" type="Label" parent="game_over_screen"]
 margin_left = 78.0
 margin_top = 614.0
 margin_right = 642.0
@@ -434,17 +507,79 @@ text = "0"
 align = 1
 valign = 1
 
-[node name="restart" type="TouchScreenButton" parent="Sprite"]
+[node name="restart" type="TouchScreenButton" parent="game_over_screen"]
 position = Vector2( 554.73, 705.824 )
 scale = Vector2( 0.4, 0.4 )
 normal = ExtResource( 18 )
+
+[node name="screen_config" type="Sprite" parent="."]
+
+[node name="box" type="Sprite" parent="screen_config"]
+position = Vector2( 362.797, -960.346 )
+scale = Vector2( 0.637216, 0.704065 )
+texture = ExtResource( 13 )
+
+[node name="config" type="Sprite" parent="screen_config"]
+modulate = Color( 0.317647, 0.905882, 0.988235, 1 )
+position = Vector2( 363.253, -1150.44 )
+scale = Vector2( 0.630671, 0.626598 )
+texture = ExtResource( 19 )
+
+[node name="music" type="TouchScreenButton" parent="screen_config"]
+position = Vector2( 314.968, -1029.25 )
+scale = Vector2( 0.8, 0.8 )
+normal = ExtResource( 20 )
+
+[node name="sound" type="TouchScreenButton" parent="screen_config"]
+position = Vector2( 314.968, -869.009 )
+scale = Vector2( 0.8, 0.8 )
+normal = ExtResource( 21 )
+
+[node name="back" type="TouchScreenButton" parent="screen_config"]
+position = Vector2( 537.351, -775.194 )
+scale = Vector2( 0.5, 0.5 )
+normal = ExtResource( 22 )
+
+[node name="config_animation" type="AnimationPlayer" parent="screen_config"]
+anims/config = SubResource( 6 )
+
+[node name="no_music" type="Sprite" parent="screen_config"]
+visible = false
+light_mask = 0
+position = Vector2( 359.16, -978.053 )
+rotation = 0.792379
+scale = Vector2( 0.837228, 3.30472 )
+texture = ExtResource( 23 )
+
+[node name="no_sound" type="Sprite" parent="screen_config"]
+visible = false
+light_mask = 0
+position = Vector2( 373.527, -803.777 )
+rotation = 0.792379
+scale = Vector2( 0.837228, 3.39107 )
+texture = ExtResource( 23 )
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 24 )
+
+[node name="hit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 25 )
+
+[node name="miss" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 26 )
+
+[node name="game_over" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 27 )
 [connection signal="area_entered" from="dumpsters/organicTrash/organicTrash" to="." method="_on_organicTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/glassTrash/glassTrash" to="." method="_on_glassTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/plasticTrash/plasticTrash" to="." method="_on_plasticTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/metalTrash/metalTrash" to="." method="_on_metalTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/paperTrash/paperTrash" to="." method="_on_paperTrash_area_entered"]
-[connection signal="texture_changed" from="planet/planet" to="." method="_on_planet_texture_changed"]
+[connection signal="pressed" from="config/TouchScreenButton" to="." method="_on_TouchScreenButton_pressed"]
 [connection signal="timeout" from="level1" to="." method="_on_level1_timeout"]
 [connection signal="timeout" from="level3" to="." method="_on_level3_timeout"]
 [connection signal="timeout" from="level2" to="." method="_on_level2_timeout"]
-[connection signal="pressed" from="Sprite/restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="game_over_screen/restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="screen_config/music" to="." method="_on_music_pressed"]
+[connection signal="pressed" from="screen_config/sound" to="." method="_on_sound_pressed"]
+[connection signal="pressed" from="screen_config/back" to="." method="_on_back_pressed"]

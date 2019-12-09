@@ -25,7 +25,8 @@ func _process(delta):
 		if current_id == global.current_id:
 			global.current_id = \"\";
 		dragging = false
-		position.y -= -300 * delta
+		if !global.pause:
+			position.y -= -300 * delta
 	pass
 
 func _on_appleOrganic_area_entered(area):

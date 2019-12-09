@@ -30,7 +30,6 @@ window/size/width=720
 window/size/height=1280
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
-window/stretch/aspect="keep"
 window/emulate_touch_from_mouse=true
 window/emulate_mouse_from_touch=true
 
