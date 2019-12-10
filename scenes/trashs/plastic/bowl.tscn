@@ -10,6 +10,7 @@ onready var global = get_node(\"/root/global\");
 var current_id = String(randi() + randf());
 var mouse_in = false
 var dragging = false
+var can_move = true;
 
 
 func _ready():
@@ -34,11 +35,12 @@ func _on_bowlPlastic_area_entered(area):
 	if area.name.ends_with('Trash'):
 		queue_free();
 		global.current_id = \"\";
+		can_move = false;
 	pass
 
 
 func _on_bowlPlastic_mouse_entered():
-	if global.current_id == \"\":
+	if global.current_id == \"\" && can_move:
 		global.current_id = current_id;
 		mouse_in = true
 	pass

@@ -19,11 +19,7 @@ func _on_play_pressed():
 func _on_getOut_pressed():
 	get_tree().quit();
 	pass
-
-
-func _on_config_pressed():
-	get_tree().change_scene(\"res://scenes/config.tscn\");
-	pass # Replace with function body."
+"
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = SubResource( 1 )
@@ -63,4 +59,3 @@ icon = ExtResource( 5 )
 flat = true
 [connection signal="pressed" from="play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="getOut" to="." method="_on_getOut_pressed"]
-[connection signal="pressed" from="config" to="." method="_on_config_pressed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://assets/sprites/stages/backgroundPhase.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/stages/backgroundPlanet.png" type="Texture" id=2]
@@ -18,15 +18,16 @@
 [ext_resource path="res://assets/sprites/menus/gameOver/points.png" type="Texture" id=16]
 [ext_resource path="res://assets/sprites/menus/gameOver/gameOver.png" type="Texture" id=17]
 [ext_resource path="res://assets/sprites/menus/gameOver/back.png" type="Texture" id=18]
-[ext_resource path="res://assets/sprites/menus/config.png" type="Texture" id=19]
-[ext_resource path="res://assets/sprites/menus/music.png" type="Texture" id=20]
-[ext_resource path="res://assets/sprites/menus/sound.png" type="Texture" id=21]
-[ext_resource path="res://assets/sprites/menus/back.png" type="Texture" id=22]
-[ext_resource path="res://assets/sprites/menus/volume.png" type="Texture" id=23]
-[ext_resource path="res://assets/sounds/sound.ogg" type="AudioStream" id=24]
-[ext_resource path="res://assets/sounds/ya.wav" type="AudioStream" id=25]
-[ext_resource path="res://assets/sounds/nono.wav" type="AudioStream" id=26]
-[ext_resource path="res://assets/sounds/game_over.wav" type="AudioStream" id=27]
+[ext_resource path="res://assets/sprites/menus/exit.png" type="Texture" id=19]
+[ext_resource path="res://assets/sprites/menus/config.png" type="Texture" id=20]
+[ext_resource path="res://assets/sprites/menus/music.png" type="Texture" id=21]
+[ext_resource path="res://assets/sprites/menus/sound.png" type="Texture" id=22]
+[ext_resource path="res://assets/sprites/menus/back.png" type="Texture" id=23]
+[ext_resource path="res://assets/sprites/menus/volume.png" type="Texture" id=24]
+[ext_resource path="res://assets/sounds/sound.ogg" type="AudioStream" id=25]
+[ext_resource path="res://assets/sounds/ya.wav" type="AudioStream" id=26]
+[ext_resource path="res://assets/sounds/nono.wav" type="AudioStream" id=27]
+[ext_resource path="res://assets/sounds/game_over.wav" type="AudioStream" id=28]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -79,6 +80,7 @@ func restart():
 	points = 0.0;
 	points_missed = 0;
 	global.current_id = '';
+	lastGame = false
 	pass
 	
 func kill_planet():
@@ -99,7 +101,6 @@ func game_over():
 		$music.stop();
 	if global.sound:
 		$game_over.play()
-	
 	lastGame = true
 	$game_over_screen/animation.play(\"game_over_an\");
 	$game_over_screen/label_points.text = String(points);
@@ -125,6 +126,9 @@ func miss():
 	pass
 
 func _ready():
+	$screen_config/no_music.visible = !global.music;
+	$screen_config/no_sound.visible = !global.sound;
+	
 	if global.music:
 		$music.play();
 	restart();
@@ -133,7 +137,7 @@ func _ready():
 func spawn_trash():
 	
 	var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance();
-	#var trash = trashs[0].instance();
+	#var trash = trashs[1].instance();
 	trash.position.x = int(rand_range(0, 600))
 	trash.position.y = 0
 	get_node('container').add_child(trash)
@@ -200,18 +204,19 @@ func _on_level3_timeout():
 
 
 func _on_restart_pressed():
+	lastGame = false
 	get_tree().reload_current_scene();
 	pass
 
 
 func _on_TouchScreenButton_pressed():
 	global.current_id = \"\";
-	if !global.pause:
-		$screen_config.show();
-		$screen_config/config_animation.play(\"config\");	
-	global.pause = true;
+	if !lastGame:
+		if !global.pause:
+			$screen_config.show();
+			$screen_config/config_animation.play(\"config\");	
+		global.pause = true;
 	pass
-
 
 func _on_music_pressed():
 	if global.music:
@@ -238,6 +243,11 @@ func _on_sound_pressed():
 func _on_back_pressed():
 	global.pause = false;
 	$screen_config.hide();
+	pass # Replace with function body.
+
+
+func _on_exit_pressed():
+	get_tree().quit();
 	pass # Replace with function body.
 "
 
@@ -452,6 +462,7 @@ wait_time = 0.87
 wait_time = 1.1
 
 [node name="game_over_screen" type="Sprite" parent="."]
+editor/display_folded = true
 position = Vector2( -1.5, -830 )
 
 [node name="box" type="Sprite" parent="game_over_screen"]
@@ -512,33 +523,40 @@ position = Vector2( 554.73, 705.824 )
 scale = Vector2( 0.4, 0.4 )
 normal = ExtResource( 18 )
 
+[node name="exit" type="TouchScreenButton" parent="game_over_screen"]
+modulate = Color( 0.72549, 0.752941, 0.929412, 1 )
+position = Vector2( 571.116, 215.288 )
+scale = Vector2( 0.6, 0.6 )
+z_index = 1
+normal = ExtResource( 19 )
+
 [node name="screen_config" type="Sprite" parent="."]
 
 [node name="box" type="Sprite" parent="screen_config"]
-position = Vector2( 362.797, -960.346 )
+position = Vector2( 361.505, -960.346 )
 scale = Vector2( 0.637216, 0.704065 )
 texture = ExtResource( 13 )
 
 [node name="config" type="Sprite" parent="screen_config"]
 modulate = Color( 0.317647, 0.905882, 0.988235, 1 )
-position = Vector2( 363.253, -1150.44 )
+position = Vector2( 354.206, -1149.15 )
 scale = Vector2( 0.630671, 0.626598 )
-texture = ExtResource( 19 )
+texture = ExtResource( 20 )
 
 [node name="music" type="TouchScreenButton" parent="screen_config"]
-position = Vector2( 314.968, -1029.25 )
-scale = Vector2( 0.8, 0.8 )
-normal = ExtResource( 20 )
-
-[node name="sound" type="TouchScreenButton" parent="screen_config"]
-position = Vector2( 314.968, -869.009 )
+position = Vector2( 299.46, -1035.71 )
 scale = Vector2( 0.8, 0.8 )
 normal = ExtResource( 21 )
+
+[node name="sound" type="TouchScreenButton" parent="screen_config"]
+position = Vector2( 300.752, -849.623 )
+scale = Vector2( 0.8, 0.8 )
+normal = ExtResource( 22 )
 
 [node name="back" type="TouchScreenButton" parent="screen_config"]
 position = Vector2( 537.351, -775.194 )
 scale = Vector2( 0.5, 0.5 )
-normal = ExtResource( 22 )
+normal = ExtResource( 23 )
 
 [node name="config_animation" type="AnimationPlayer" parent="screen_config"]
 anims/config = SubResource( 6 )
@@ -549,7 +567,7 @@ light_mask = 0
 position = Vector2( 359.16, -978.053 )
 rotation = 0.792379
 scale = Vector2( 0.837228, 3.30472 )
-texture = ExtResource( 23 )
+texture = ExtResource( 24 )
 
 [node name="no_sound" type="Sprite" parent="screen_config"]
 visible = false
@@ -557,19 +575,19 @@ light_mask = 0
 position = Vector2( 373.527, -803.777 )
 rotation = 0.792379
 scale = Vector2( 0.837228, 3.39107 )
-texture = ExtResource( 23 )
+texture = ExtResource( 24 )
 
 [node name="music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 24 )
-
-[node name="hit" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 25 )
 
-[node name="miss" type="AudioStreamPlayer" parent="."]
+[node name="hit" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 26 )
 
-[node name="game_over" type="AudioStreamPlayer" parent="."]
+[node name="miss" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 27 )
+
+[node name="game_over" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 28 )
 [connection signal="area_entered" from="dumpsters/organicTrash/organicTrash" to="." method="_on_organicTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/glassTrash/glassTrash" to="." method="_on_glassTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/plasticTrash/plasticTrash" to="." method="_on_plasticTrash_area_entered"]
@@ -580,6 +598,7 @@ stream = ExtResource( 27 )
 [connection signal="timeout" from="level3" to="." method="_on_level3_timeout"]
 [connection signal="timeout" from="level2" to="." method="_on_level2_timeout"]
 [connection signal="pressed" from="game_over_screen/restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="game_over_screen/exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="screen_config/music" to="." method="_on_music_pressed"]
 [connection signal="pressed" from="screen_config/sound" to="." method="_on_sound_pressed"]
 [connection signal="pressed" from="screen_config/back" to="." method="_on_back_pressed"]
