@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=53 format=2]
 
 [ext_resource path="res://assets/sprites/stages/backgroundPhase.png" type="Texture" id=1]
 [ext_resource path="res://assets/sprites/stages/backgroundPlanet.png" type="Texture" id=2]
@@ -9,32 +9,52 @@
 [ext_resource path="res://assets/sprites/dumpsters/metal.png" type="Texture" id=7]
 [ext_resource path="res://assets/sprites/dumpsters/paper.png" type="Texture" id=8]
 [ext_resource path="res://assets/sprites/stages/config.png" type="Texture" id=9]
-[ext_resource path="res://assets/sprites/planets/happy.png" type="Texture" id=10]
-[ext_resource path="res://assets/fonts/LemonMilklight.otf" type="DynamicFontData" id=11]
-[ext_resource path="res://scenes/global.gd" type="Script" id=12]
-[ext_resource path="res://assets/sprites/menus/gameOver/textbox.png" type="Texture" id=13]
-[ext_resource path="res://assets/sprites/menus/gameOver/pointsbar.png" type="Texture" id=14]
-[ext_resource path="res://assets/sprites/menus/gameOver/best.png" type="Texture" id=15]
-[ext_resource path="res://assets/sprites/menus/gameOver/points.png" type="Texture" id=16]
-[ext_resource path="res://assets/sprites/menus/gameOver/gameOver.png" type="Texture" id=17]
-[ext_resource path="res://assets/sprites/menus/gameOver/back.png" type="Texture" id=18]
-[ext_resource path="res://assets/sprites/menus/exit.png" type="Texture" id=19]
-[ext_resource path="res://assets/sprites/menus/config.png" type="Texture" id=20]
-[ext_resource path="res://assets/sprites/menus/music.png" type="Texture" id=21]
-[ext_resource path="res://assets/sprites/menus/sound.png" type="Texture" id=22]
-[ext_resource path="res://assets/sprites/menus/back.png" type="Texture" id=23]
-[ext_resource path="res://assets/sprites/menus/volume.png" type="Texture" id=24]
-[ext_resource path="res://assets/sounds/sound.ogg" type="AudioStream" id=25]
-[ext_resource path="res://assets/sounds/ya.wav" type="AudioStream" id=26]
-[ext_resource path="res://assets/sounds/nono.wav" type="AudioStream" id=27]
-[ext_resource path="res://assets/sounds/game_over.wav" type="AudioStream" id=28]
+[ext_resource path="res://assets/sprites/menus/help.png" type="Texture" id=10]
+[ext_resource path="res://assets/sprites/planets/happy.png" type="Texture" id=11]
+[ext_resource path="res://assets/fonts/LemonMilklight.otf" type="DynamicFontData" id=12]
+[ext_resource path="res://scenes/global.gd" type="Script" id=13]
+[ext_resource path="res://assets/sprites/menus/gameOver/textbox.png" type="Texture" id=14]
+[ext_resource path="res://assets/sprites/menus/gameOver/pointsbar.png" type="Texture" id=15]
+[ext_resource path="res://assets/sprites/menus/gameOver/best.png" type="Texture" id=16]
+[ext_resource path="res://assets/sprites/menus/gameOver/points.png" type="Texture" id=17]
+[ext_resource path="res://assets/sprites/menus/gameOver/gameOver.png" type="Texture" id=18]
+[ext_resource path="res://assets/sprites/menus/gameOver/back.png" type="Texture" id=19]
+[ext_resource path="res://assets/sprites/menus/exit.png" type="Texture" id=20]
+[ext_resource path="res://assets/sprites/menus/config.png" type="Texture" id=21]
+[ext_resource path="res://assets/sprites/menus/music.png" type="Texture" id=22]
+[ext_resource path="res://assets/sprites/menus/sound.png" type="Texture" id=23]
+[ext_resource path="res://assets/sprites/menus/back.png" type="Texture" id=24]
+[ext_resource path="res://assets/sprites/menus/volume.png" type="Texture" id=25]
+[ext_resource path="res://assets/fonts/Neothic.ttf" type="DynamicFontData" id=26]
+[ext_resource path="res://assets/sprites/trashs/glass/bottle.png" type="Texture" id=27]
+[ext_resource path="res://assets/sprites/trashs/glass/conteiner.png" type="Texture" id=28]
+[ext_resource path="res://assets/sprites/trashs/glass/cup.png" type="Texture" id=29]
+[ext_resource path="res://assets/sprites/trashs/metal/soda.png" type="Texture" id=30]
+[ext_resource path="res://assets/sprites/trashs/metal/pan.png" type="Texture" id=31]
+[ext_resource path="res://assets/sprites/trashs/metal/spanner.png" type="Texture" id=32]
+[ext_resource path="res://assets/sprites/trashs/organic/banana.png" type="Texture" id=33]
+[ext_resource path="res://assets/sprites/trashs/plastic/bag.png" type="Texture" id=34]
+[ext_resource path="res://assets/sprites/trashs/plastic/bowl.png" type="Texture" id=35]
+[ext_resource path="res://assets/sprites/trashs/plastic/glassPlastic.png" type="Texture" id=36]
+[ext_resource path="res://assets/sprites/trashs/paper/paper.png" type="Texture" id=37]
+[ext_resource path="res://assets/sprites/trashs/paper/paperBall.png" type="Texture" id=38]
+[ext_resource path="res://assets/sprites/trashs/organic/apple.png" type="Texture" id=39]
+[ext_resource path="res://assets/sprites/trashs/organic/snack.png" type="Texture" id=40]
+[ext_resource path="res://assets/sounds/sound.ogg" type="AudioStream" id=41]
+[ext_resource path="res://assets/sounds/ya.wav" type="AudioStream" id=42]
+[ext_resource path="res://assets/sounds/nono.wav" type="AudioStream" id=43]
+[ext_resource path="res://assets/sounds/game_over.wav" type="AudioStream" id=44]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
 const new_soda = preload(\"res://scenes/trashs/metal/soda.tscn\")
+const new_pan = preload(\"res://scenes/trashs/metal/pan.tscn\")
+const new_spanner = preload(\"res://scenes/trashs/metal/spanner.tscn\")
 
 const new_bottle = preload(\"res://scenes/trashs/glass/bottle.tscn\")
+const new_container = preload(\"res://scenes/trashs/glass/container.tscn\")
+const new_cup =  preload(\"res://scenes/trashs/glass/cup.tscn\")
 
 const new_paper = preload(\"res://scenes/trashs/paper/paper.tscn\")
 const new_paper_ball = preload(\"res://scenes/trashs/paper/paperBall.tscn\")
@@ -66,7 +86,8 @@ onready var levelThree = get_node(\"level3\");
 var lastGame = false;
 
 const trashs = [
-	new_soda, new_bottle, new_paper,
+	new_soda, new_pan, new_spanner,
+	new_bottle, new_container, new_cup, new_paper,
 	new_paper_ball, new_apple, new_banana,
 	new_snack, new_bag, new_bowl, new_glass
 ];
@@ -137,7 +158,7 @@ func _ready():
 func spawn_trash():
 	
 	var trash = trashs[int(rand_range(0, trashs.size() - 1))].instance();
-	#var trash = trashs[1].instance();
+	#var trash = trashs[5].instance();
 	trash.position.x = int(rand_range(0, 600))
 	trash.position.y = 0
 	get_node('container').add_child(trash)
@@ -243,12 +264,23 @@ func _on_sound_pressed():
 func _on_back_pressed():
 	global.pause = false;
 	$screen_config.hide();
+	$help_box.hide();
 	pass # Replace with function body.
 
 
 func _on_exit_pressed():
 	get_tree().quit();
 	pass # Replace with function body.
+
+
+func _on_TouchScreenButtonHelp_pressed():
+	global.current_id = \"\";
+	if !lastGame:
+		if !global.pause:
+			$help_box.show();
+			$help_box/help_animation.play(\"config\");	
+		global.pause = true;
+	pass
 "
 
 [sub_resource type="CapsuleShape2D" id=2]
@@ -258,7 +290,7 @@ height = 128.521
 [sub_resource type="DynamicFont" id=3]
 size = 31
 outline_size = 1
-font_data = ExtResource( 11 )
+font_data = ExtResource( 12 )
 
 [sub_resource type="Animation" id=4]
 resource_name = "game_over_an"
@@ -277,7 +309,7 @@ tracks/0/keys = {
 
 [sub_resource type="DynamicFont" id=5]
 size = 55
-font_data = ExtResource( 11 )
+font_data = ExtResource( 12 )
 
 [sub_resource type="Animation" id=6]
 resource_name = "config"
@@ -294,6 +326,28 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Vector2( 0, 0 ), Vector2( 0, 1450 ) ]
 }
+
+[sub_resource type="Animation" id=7]
+resource_name = "config"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 2190 ) ]
+}
+
+[sub_resource type="DynamicFont" id=8]
+size = 85
+outline_size = 1
+outline_color = Color( 0.321569, 0.909804, 0.988235, 1 )
+font_data = ExtResource( 26 )
 
 [node name="main" type="Node"]
 script = SubResource( 1 )
@@ -404,13 +458,24 @@ scale = Vector2( 1.17795, 1.13346 )
 z_index = 1
 normal = ExtResource( 9 )
 
+[node name="help" type="Node2D" parent="."]
+editor/display_folded = true
+
+[node name="TouchScreenButtonHelp" type="TouchScreenButton" parent="help"]
+modulate = Color( 0.996078, 0.996078, 0.996078, 1 )
+self_modulate = Color( 1, 0.996078, 0.996078, 1 )
+position = Vector2( 604.034, 5.4397 )
+scale = Vector2( 0.2, 0.2 )
+normal = ExtResource( 10 )
+
 [node name="planet" type="Node2D" parent="."]
+editor/display_folded = true
 
 [node name="planet" type="Sprite" parent="planet"]
 position = Vector2( 367.03, 1151.44 )
 scale = Vector2( 0.55, 0.55 )
 z_index = 2
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 
 [node name="bar" type="Node2D" parent="."]
 editor/display_folded = true
@@ -420,20 +485,20 @@ z_index = 2
 position = Vector2( 45.658, 50 )
 scale = Vector2( 0.2, 0.2 )
 z_index = 1
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 
 [node name="lifeTwo" type="Sprite" parent="bar"]
 position = Vector2( 250.519, 94.5125 )
 scale = Vector2( 0.2, 0.2 )
 z_index = 1
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 offset = Vector2( -606.383, -220 )
 
 [node name="lifeThree" type="Sprite" parent="bar"]
 position = Vector2( 212.043, 50 )
 scale = Vector2( 0.2, 0.2 )
 z_index = 1
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 
 [node name="points" type="Label" parent="bar"]
 anchor_right = 0.65
@@ -449,7 +514,7 @@ valign = 1
 autowrap = true
 
 [node name="global" type="Node2D" parent="."]
-script = ExtResource( 12 )
+script = ExtResource( 13 )
 
 [node name="level1" type="Timer" parent="."]
 wait_time = 1.4
@@ -466,34 +531,34 @@ editor/display_folded = true
 position = Vector2( -1.5, -830 )
 
 [node name="box" type="Sprite" parent="game_over_screen"]
-position = Vector2( 360.999, 508.109 )
+position = Vector2( 360.999, 506.439 )
 scale = Vector2( 0.647739, 0.687121 )
-texture = ExtResource( 13 )
+texture = ExtResource( 14 )
 
 [node name="bar" type="Sprite" parent="game_over_screen"]
 position = Vector2( 363.109, 479.185 )
 scale = Vector2( 0.648574, 0.806631 )
-texture = ExtResource( 14 )
+texture = ExtResource( 15 )
 
 [node name="bar2" type="Sprite" parent="game_over_screen"]
 position = Vector2( 360.094, 650 )
 scale = Vector2( 0.648574, 0.806631 )
-texture = ExtResource( 14 )
+texture = ExtResource( 15 )
 
 [node name="best" type="Sprite" parent="game_over_screen"]
 position = Vector2( 364.778, 563.748 )
 scale = Vector2( 0.9, 0.9 )
-texture = ExtResource( 15 )
+texture = ExtResource( 16 )
 
 [node name="points" type="Sprite" parent="game_over_screen"]
 position = Vector2( 357.242, 399.044 )
 scale = Vector2( 0.9, 0.9 )
-texture = ExtResource( 16 )
+texture = ExtResource( 17 )
 
 [node name="game_over" type="Sprite" parent="game_over_screen"]
 position = Vector2( 358.749, 275.845 )
 scale = Vector2( 0.8, 0.8 )
-texture = ExtResource( 17 )
+texture = ExtResource( 18 )
 
 [node name="animation" type="AnimationPlayer" parent="game_over_screen"]
 anims/game_over_an = SubResource( 4 )
@@ -521,42 +586,43 @@ valign = 1
 [node name="restart" type="TouchScreenButton" parent="game_over_screen"]
 position = Vector2( 554.73, 705.824 )
 scale = Vector2( 0.4, 0.4 )
-normal = ExtResource( 18 )
+normal = ExtResource( 19 )
 
 [node name="exit" type="TouchScreenButton" parent="game_over_screen"]
 modulate = Color( 0.72549, 0.752941, 0.929412, 1 )
 position = Vector2( 571.116, 215.288 )
 scale = Vector2( 0.6, 0.6 )
 z_index = 1
-normal = ExtResource( 19 )
+normal = ExtResource( 20 )
 
 [node name="screen_config" type="Sprite" parent="."]
+editor/display_folded = true
 
 [node name="box" type="Sprite" parent="screen_config"]
 position = Vector2( 361.505, -960.346 )
 scale = Vector2( 0.637216, 0.704065 )
-texture = ExtResource( 13 )
+texture = ExtResource( 14 )
 
 [node name="config" type="Sprite" parent="screen_config"]
 modulate = Color( 0.317647, 0.905882, 0.988235, 1 )
 position = Vector2( 354.206, -1149.15 )
 scale = Vector2( 0.630671, 0.626598 )
-texture = ExtResource( 20 )
+texture = ExtResource( 21 )
 
 [node name="music" type="TouchScreenButton" parent="screen_config"]
 position = Vector2( 299.46, -1035.71 )
 scale = Vector2( 0.8, 0.8 )
-normal = ExtResource( 21 )
+normal = ExtResource( 22 )
 
 [node name="sound" type="TouchScreenButton" parent="screen_config"]
 position = Vector2( 300.752, -849.623 )
 scale = Vector2( 0.8, 0.8 )
-normal = ExtResource( 22 )
+normal = ExtResource( 23 )
 
 [node name="back" type="TouchScreenButton" parent="screen_config"]
 position = Vector2( 537.351, -775.194 )
 scale = Vector2( 0.5, 0.5 )
-normal = ExtResource( 23 )
+normal = ExtResource( 24 )
 
 [node name="config_animation" type="AnimationPlayer" parent="screen_config"]
 anims/config = SubResource( 6 )
@@ -567,7 +633,7 @@ light_mask = 0
 position = Vector2( 359.16, -978.053 )
 rotation = 0.792379
 scale = Vector2( 0.837228, 3.30472 )
-texture = ExtResource( 24 )
+texture = ExtResource( 25 )
 
 [node name="no_sound" type="Sprite" parent="screen_config"]
 visible = false
@@ -575,25 +641,177 @@ light_mask = 0
 position = Vector2( 373.527, -803.777 )
 rotation = 0.792379
 scale = Vector2( 0.837228, 3.39107 )
-texture = ExtResource( 24 )
+texture = ExtResource( 25 )
+
+[node name="help_box" type="Sprite" parent="."]
+
+[node name="box" type="Sprite" parent="help_box"]
+position = Vector2( 366.46, -1693.87 )
+scale = Vector2( 0.753324, 0.868586 )
+texture = ExtResource( 14 )
+
+[node name="back" type="TouchScreenButton" parent="help_box"]
+position = Vector2( 584.567, -1449.36 )
+scale = Vector2( 0.5, 0.5 )
+normal = ExtResource( 24 )
+
+[node name="help_animation" type="AnimationPlayer" parent="help_box"]
+anims/config = SubResource( 7 )
+
+[node name="Label" type="Label" parent="help_box"]
+modulate = Color( 0.368627, 0.898039, 0.941176, 1 )
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = 218.058
+margin_top = -2071.18
+margin_right = 501.055
+margin_bottom = -1958.18
+custom_fonts/font = SubResource( 8 )
+text = "AJUDA"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="organic" type="Sprite" parent="help_box"]
+position = Vector2( 113.838, -1650 )
+scale = Vector2( 0.46, 0.46 )
+texture = ExtResource( 4 )
+
+[node name="glass" type="Sprite" parent="help_box"]
+position = Vector2( 113.838, -1790 )
+scale = Vector2( 0.46, 0.46 )
+texture = ExtResource( 5 )
+
+[node name="bottle" type="Sprite" parent="help_box"]
+self_modulate = Color( 0.913725, 0.898039, 0.898039, 1 )
+position = Vector2( 243.838, -1781.48 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 27 )
+
+[node name="container" type="Sprite" parent="help_box"]
+self_modulate = Color( 0.913725, 0.898039, 0.898039, 1 )
+position = Vector2( 404.766, -1782.91 )
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 28 )
+
+[node name="container2" type="Sprite" parent="help_box"]
+self_modulate = Color( 0.913725, 0.898039, 0.898039, 1 )
+position = Vector2( 564.766, -1782.91 )
+scale = Vector2( 0.15, 0.15 )
+texture = ExtResource( 29 )
+
+[node name="plastic" type="Sprite" parent="help_box"]
+position = Vector2( 113.838, -1520 )
+scale = Vector2( 0.46, 0.46 )
+texture = ExtResource( 6 )
+
+[node name="soda" type="Sprite" parent="help_box"]
+position = Vector2( 243.838, -1916.28 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 30 )
+
+[node name="pan" type="Sprite" parent="help_box"]
+position = Vector2( 404.766, -1923.44 )
+scale = Vector2( 0.15, 0.15 )
+texture = ExtResource( 31 )
+
+[node name="spanner" type="Sprite" parent="help_box"]
+position = Vector2( 564.766, -1919.14 )
+scale = Vector2( 0.15, 0.15 )
+texture = ExtResource( 32 )
+
+[node name="banana" type="Sprite" parent="help_box"]
+position = Vector2( 243.838, -1654.67 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 33 )
+
+[node name="bag" type="Sprite" parent="help_box"]
+position = Vector2( 243.838, -1519.48 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 34 )
+
+[node name="bowl" type="Sprite" parent="help_box"]
+position = Vector2( 403.836, -1507.44 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 35 )
+
+[node name="glassPlastic" type="Sprite" parent="help_box"]
+position = Vector2( 564.767, -1505.79 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 36 )
+
+[node name="paper2" type="Sprite" parent="help_box"]
+position = Vector2( 243.838, -1381.69 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 37 )
+
+[node name="paper3" type="Sprite" parent="help_box"]
+position = Vector2( 403.836, -1382.74 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 38 )
+
+[node name="apple" type="Sprite" parent="help_box"]
+position = Vector2( 403.836, -1657.37 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 39 )
+
+[node name="x" type="Sprite" parent="help_box"]
+position = Vector2( 564.767, -1649.25 )
+scale = Vector2( 0.35, 0.35 )
+texture = ExtResource( 40 )
+
+[node name="metal" type="Sprite" parent="help_box"]
+position = Vector2( 113.838, -1920 )
+scale = Vector2( 0.46, 0.46 )
+texture = ExtResource( 7 )
+
+[node name="paper" type="Sprite" parent="help_box"]
+position = Vector2( 113.838, -1383.86 )
+scale = Vector2( 0.46, 0.46 )
+texture = ExtResource( 8 )
+
+[node name="HSeparator" type="HSeparator" parent="help_box"]
+margin_left = 75.1572
+margin_top = -1858.76
+margin_right = 620.157
+margin_bottom = -1854.76
+
+[node name="HSeparator3" type="HSeparator" parent="help_box"]
+margin_left = 75.0
+margin_top = -1588.45
+margin_right = 620.0
+margin_bottom = -1584.45
+
+[node name="HSeparator4" type="HSeparator" parent="help_box"]
+margin_left = 75.0
+margin_top = -1457.94
+margin_right = 620.0
+margin_bottom = -1453.94
+
+[node name="HSeparator2" type="HSeparator" parent="help_box"]
+margin_left = 75.0
+margin_top = -1726.69
+margin_right = 620.0
+margin_bottom = -1722.69
 
 [node name="music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 25 )
+stream = ExtResource( 41 )
 
 [node name="hit" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 26 )
+stream = ExtResource( 42 )
 
 [node name="miss" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 27 )
+stream = ExtResource( 43 )
 
 [node name="game_over" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 28 )
+stream = ExtResource( 44 )
 [connection signal="area_entered" from="dumpsters/organicTrash/organicTrash" to="." method="_on_organicTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/glassTrash/glassTrash" to="." method="_on_glassTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/plasticTrash/plasticTrash" to="." method="_on_plasticTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/metalTrash/metalTrash" to="." method="_on_metalTrash_area_entered"]
 [connection signal="area_entered" from="dumpsters/paperTrash/paperTrash" to="." method="_on_paperTrash_area_entered"]
 [connection signal="pressed" from="config/TouchScreenButton" to="." method="_on_TouchScreenButton_pressed"]
+[connection signal="pressed" from="help/TouchScreenButtonHelp" to="." method="_on_TouchScreenButtonHelp_pressed"]
 [connection signal="timeout" from="level1" to="." method="_on_level1_timeout"]
 [connection signal="timeout" from="level3" to="." method="_on_level3_timeout"]
 [connection signal="timeout" from="level2" to="." method="_on_level2_timeout"]
@@ -602,3 +820,4 @@ stream = ExtResource( 28 )
 [connection signal="pressed" from="screen_config/music" to="." method="_on_music_pressed"]
 [connection signal="pressed" from="screen_config/sound" to="." method="_on_sound_pressed"]
 [connection signal="pressed" from="screen_config/back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="help_box/back" to="." method="_on_back_pressed"]

@@ -1,0 +1,70 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/sprites/trashs/glass/cup.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var global = get_node(\"/root/global\");
+
+var current_id = String(randi() + randf());
+var mouse_in = false
+var dragging = false
+var can_move = true;
+
+func _ready():
+	pass
+
+func _process(delta):
+	if mouse_in && Input.is_action_pressed(\"click\"):
+		dragging = true
+		
+	if dragging && Input.is_action_pressed(\"click\") && !global.pause:
+		position = get_viewport().get_mouse_position()
+		
+	else:
+		if current_id == global.current_id:
+			global.current_id = \"\";
+		dragging = false
+		if !global.pause:
+			position.y -= -300 * delta
+	pass
+
+func _on_bottleGlass_area_entered(area):
+	if area.name.ends_with('Trash'):
+		queue_free();
+		global.current_id = \"\";
+		can_move = false
+	pass 
+
+func _on_bottleGlass_mouse_entered():
+	if global.current_id == \"\" && can_move:
+		global.current_id = current_id;
+		mouse_in = true
+	pass
+
+func _on_bottleGlass_mouse_exited():
+	mouse_in = false
+	pass
+"
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 48.2425
+height = 47.6757
+
+[node name="cup" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="cupGlass" type="Area2D" parent="."]
+
+[node name="collisionCup" type="CollisionShape2D" parent="cupGlass"]
+position = Vector2( 57.4241, 4.03955 )
+shape = SubResource( 2 )
+
+[node name="cupSprite" type="Sprite" parent="."]
+position = Vector2( 57.4442, 2.57213 )
+scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 1 )
+[connection signal="area_entered" from="cupGlass" to="." method="_on_bottleGlass_area_entered"]
+[connection signal="mouse_entered" from="cupGlass" to="." method="_on_bottleGlass_mouse_entered"]
+[connection signal="mouse_exited" from="cupGlass" to="." method="_on_bottleGlass_mouse_exited"]
